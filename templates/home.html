@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Barangay Survey Generator{% endblock %}
+
+{% block content %}
+<div class="px-4 py-6 sm:px-0">
+    <!-- Hero Section -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+            Barangay Survey Generator
+        </h1>
+        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Create and manage surveys for your barangay community. Gather feedback, conduct polls, and make data-driven decisions for better governance.
+        </p>
+        <div class="flex justify-center space-x-4">
+            <a href="/create" class="bg-barangay-blue text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-blue-700 transition-colors">
+                Create New Survey
+            </a>
+            <a href="#surveys" class="bg-white text-barangay-blue border-2 border-barangay-blue px-8 py-3 rounded-lg text-lg font-medium hover:bg-blue-50 transition-colors">
+                View Surveys
+            </a>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="grid md:grid-cols-3 gap-8 mb-12">
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="w-12 h-12 bg-barangay-green rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Easy Creation</h3>
+            <p class="text-gray-600">Create surveys quickly with our intuitive interface. Add multiple question types and customize as needed.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="w-12 h-12 bg-barangay-orange rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Community Focused</h3>
+            <p class="text-gray-600">Designed specifically for barangay management and community engagement in the Philippines.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="w-12 h-12 bg-barangay-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Real-time Results</h3>
+            <p class="text-gray-600">View responses and analytics in real-time to make informed decisions for your community.</p>
+        </div>
+    </div>
+
+    <!-- Active Surveys Section -->
+    <div id="surveys" class="bg-white rounded-lg shadow-md">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-900">Active Surveys</h2>
+        </div>
+        
+        {% if surveys %}
+        <div class="p-6">
+            <div class="grid gap-6">
+                {% for survey in surveys %}
+                <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ survey.title }}</h3>
+                            {% if survey.description %}
+                            <p class="text-gray-600 mb-4">{{ survey.description }}</p>
+                            {% endif %}
+                            <p class="text-sm text-gray-500">
+                                Created: {{ survey.created_at.strftime('%B %d, %Y') }}
+                            </p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="/survey/{{ survey.id }}" class="bg-barangay-blue text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+                                Take Survey
+                            </a>
+                            <a href="/survey/{{ survey.id }}/results" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors">
+                                View Results
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="p-12 text-center">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No surveys yet</h3>
+            <p class="text-gray-600 mb-6">Create your first survey to start gathering community feedback.</p>
+            <a href="/create" class="bg-barangay-blue text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                Create Your First Survey
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

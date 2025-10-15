@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}{{ survey.title }} - Barangay Survey Generator{% endblock %}
+
+{% block content %}
+<div class="px-4 py-6 sm:px-0">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="px-6 py-6 border-b border-gray-200">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ survey.title }}</h1>
+                {% if survey.description %}
+                <p class="text-gray-600 text-lg">{{ survey.description }}</p>
+                {% endif %}
+                <div class="mt-4 flex items-center text-sm text-gray-500">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Created on {{ survey.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                </div>
+            </div>
+            
+            <form method="post" action="/survey/{{ survey.id }}/submit" class="p-6 space-y-8">
+                <!-- Respondent Name -->
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <label for="respondent_name" class="block text-sm font-medium text-gray-700 mb-2">
+                        Your Name (Optional)
+                    </label>
+                    <input 
+                        type="text" 
+                        id="respondent_name" 
+                        name="respondent_name"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-barangay-blue focus:border-barangay-blue"
+                        placeholder="Enter your name (optional)"
+                    >
+                </div>
+                
+                <!-- Questions -->
+                {% for question in questions %}
+                <div class="border-l-4 border-barangay-blue pl-6">
+                    <label class="block text-lg font-medium text-gray-900 mb-3">
+                        {{ question.question_text }}
+                        {% if question.is_required %}
+                        <span class="text-red-500">*</span>
+                        {% endif %}
+                    </label>
+                    
+                    {% if question.question_type == 'text' %}
+                    <textarea 
+                        name="question_{{ question.id }}"
+                        {% if question.is_required %}required{% endif %}
+                        rows="3"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-barangay-blue focus:border-barangay-blue"
+                        placeholder="Enter your answer here..."
+                    ></textarea>
+                    
+                    {% elif question.question_type == 'single_choice' %}
+                    {% set options = question.options.split(',') if question.options else [] %}
+                    <div class="space-y-2">
+                        {% for option in options %}
+                        <label class="flex items-center">
+                            <input 
+                                type="radio" 
+                                name="question_{{ question.id }}" 
+                                value="{{ option.strip() }}"
+                                {% if question.is_required %}required{% endif %}
+                                class="h-4 w-4 text-barangay-blue focus:ring-barangay-blue border-gray-300"
+                            >
+                            <span class="ml-2 text-gray-700">{{ option.strip() }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    
+                    {% elif question.question_type == 'multiple_choice' %}
+                    {% set options = question.options.split(',') if question.options else [] %}
+                    <div class="space-y-2">
+                        {% for option in options %}
+                        <label class="flex items-center">
+                            <input 
+                                type="checkbox" 
+                                name="question_{{ question.id }}"
+                                value="{{ option.strip() }}"
+                                class="h-4 w-4 text-barangay-blue focus:ring-barangay-blue border-gray-300 rounded"
+                            >
+                            <span class="ml-2 text-gray-700">{{ option.strip() }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <!-- Submit Button -->
+                <div class="pt-6 border-t border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm text-gray-500">
+                            Fields marked with <span class="text-red-500">*</span> are required
+                        </p>
+                        <button 
+                            type="submit" 
+                            class="bg-barangay-green text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-green-700 transition-colors"
+                        >
+                            Submit Survey
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Survey Info -->
+        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <h4 class="text-sm font-medium text-blue-900">Survey Information</h4>
+                    <p class="text-sm text-blue-800 mt-1">
+                        Your responses are anonymous and will be used to help improve our barangay services. 
+                        Thank you for taking the time to participate in this survey.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

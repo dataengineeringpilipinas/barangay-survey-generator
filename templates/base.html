@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Barangay Survey Generator{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'barangay-blue': '#1e40af',
+                        'barangay-green': '#059669',
+                        'barangay-orange': '#ea580c'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b-4 border-barangay-blue">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-3">
+                        <img src="/static/img/barangay-dep.svg" alt="Barangay DEP Logo" class="h-10 w-auto">
+                        <span class="text-xl font-bold text-gray-800">Barangay Survey Generator</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-barangay-blue px-3 py-2 rounded-md text-sm font-medium">
+                        Home
+                    </a>
+                    <a href="/create" class="bg-barangay-blue text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+                        Create Survey
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-12">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-gray-500 text-sm">
+                <p>&copy; 2025 Barangay Survey Generator. Part of <a href="https://www.thepusoproject.ph/solutions" class="text-barangay-blue hover:underline">The Puso Project</a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Thank You - Barangay Survey Generator{% endblock %}
+
+{% block content %}
+<div class="px-4 py-6 sm:px-0">
+    <div class="max-w-2xl mx-auto text-center">
+        <div class="bg-white rounded-lg shadow-md p-12">
+            <!-- Success Icon -->
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            
+            <!-- Thank You Message -->
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Thank You!</h1>
+            <p class="text-xl text-gray-600 mb-8">
+                Your response has been successfully submitted. We appreciate you taking the time to participate in our survey.
+            </p>
+            
+            <!-- Additional Information -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+                <h3 class="text-lg font-semibold text-blue-900 mb-3">What happens next?</h3>
+                <ul class="text-left text-blue-800 space-y-2">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Your feedback will be reviewed by our barangay officials</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Results will be used to improve our community services</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Survey results may be shared with the community</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex justify-center space-x-4">
+                <a href="/" class="bg-barangay-blue text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Back to Home
+                </a>
+                <a href="/create" class="bg-white text-barangay-blue border-2 border-barangay-blue px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors">
+                    Create Another Survey
+                </a>
+            </div>
+        </div>
+        
+        <!-- Community Message -->
+        <div class="mt-8 bg-gray-50 border border-gray-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">Building a Better Community Together</h3>
+            <p class="text-gray-600">
+                Your participation in community surveys helps us make informed decisions that benefit everyone. 
+                Thank you for being an active member of our barangay community.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

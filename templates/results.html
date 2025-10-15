@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}{{ survey.title }} - Results - Barangay Survey Generator{% endblock %}
+
+{% block content %}
+<div class="px-4 py-6 sm:px-0">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">{{ survey.title }} - Results</h1>
+                        <p class="text-gray-600 mt-1">Survey responses and analytics</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <a href="/survey/{{ survey.id }}" class="bg-barangay-blue text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+                            View Survey
+                        </a>
+                        <a href="/" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors">
+                            Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Summary Stats -->
+            <div class="px-6 py-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-blue-600 font-medium">Total Questions</p>
+                                <p class="text-2xl font-bold text-blue-900">{{ questions|length }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-green-600 font-medium">Total Responses</p>
+                                <p class="text-2xl font-bold text-green-900">{{ responses|length }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-orange-600 font-medium">Created</p>
+                                <p class="text-lg font-bold text-orange-900">{{ survey.created_at.strftime('%b %d, %Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if responses %}
+        <!-- Question Results -->
+        <div class="space-y-6">
+            {% for question in questions %}
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">{{ question.question_text }}</h3>
+                    <div class="flex items-center space-x-4 mt-2">
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                            {{ question.question_type.replace('_', ' ').title() }}
+                        </span>
+                        {% if question.is_required %}
+                        <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-sm">Required</span>
+                        {% else %}
+                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">Optional</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    {% if question.question_type == 'text' %}
+                    <!-- Text responses -->
+                    <div class="space-y-3">
+                        {% for response in responses %}
+                        {% set answer = response.answers | selectattr('question_id', 'equalto', question.id) | first %}
+                        {% if answer %}
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-sm font-medium text-gray-700">
+                                    {% if response.respondent_name %}
+                                        {{ response.respondent_name }}
+                                    {% else %}
+                                        Anonymous
+                                    {% endif %}
+                                </span>
+                                <span class="text-xs text-gray-500">
+                                    {{ response.submitted_at.strftime('%b %d, %Y %I:%M %p') }}
+                                </span>
+                            </div>
+                            <p class="text-gray-800">{{ answer.answer_text }}</p>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    {% elif question.question_type in ['single_choice', 'multiple_choice'] %}
+                    <!-- Choice responses -->
+                    {% set options = question.options.split(',') if question.options else [] %}
+                    {% set answer_counts = {} %}
+                    
+                    <!-- Count answers for each option -->
+                    {% for response in responses %}
+                    {% set answer = response.answers | selectattr('question_id', 'equalto', question.id) | first %}
+                    {% if answer %}
+                    {% if question.question_type == 'multiple_choice' %}
+                    {% set selected_options = answer.answer_text.split(',') %}
+                    {% for option in selected_options %}
+                    {% set option = option.strip() %}
+                    {% if option in answer_counts %}
+                    {% set _ = answer_counts.update({option: answer_counts[option] + 1}) %}
+                    {% else %}
+                    {% set _ = answer_counts.update({option: 1}) %}
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    {% set option = answer.answer_text.strip() %}
+                    {% if option in answer_counts %}
+                    {% set _ = answer_counts.update({option: answer_counts[option] + 1}) %}
+                    {% else %}
+                    {% set _ = answer_counts.update({option: 1}) %}
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    
+                    <!-- Display results -->
+                    <div class="space-y-3">
+                        {% for option in options %}
+                        {% set option = option.strip() %}
+                        {% set count = answer_counts.get(option, 0) %}
+                        {% set percentage = (count / responses|length * 100) if responses|length > 0 else 0 %}
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700">{{ option }}</span>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-32 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-barangay-blue h-2 rounded-full" style="width: {{ percentage }}%"></div>
+                                </div>
+                                <span class="text-sm font-medium text-gray-600 w-16 text-right">
+                                    {{ count }} ({{ "%.1f"|format(percentage) }}%)
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Individual Responses -->
+        <div class="mt-8 bg-white rounded-lg shadow-md">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Individual Responses</h3>
+                <p class="text-gray-600 mt-1">Detailed view of each survey response</p>
+            </div>
+            
+            <div class="p-6">
+                <div class="space-y-6">
+                    {% for response in responses %}
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900">
+                                    {% if response.respondent_name %}
+                                        {{ response.respondent_name }}
+                                    {% else %}
+                                        Anonymous Respondent
+                                    {% endif %}
+                                </h4>
+                                <p class="text-sm text-gray-500">
+                                    Submitted on {{ response.submitted_at.strftime('%B %d, %Y at %I:%M %p') }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            {% for answer in response.answers %}
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <h5 class="font-medium text-gray-700 mb-1">
+                                    {% for question in questions %}
+                                    {% if question.id == answer.question_id %}
+                                        {{ question.question_text }}
+                                    {% endif %}
+                                    {% endfor %}
+                                </h5>
+                                <p class="text-gray-800">{{ answer.answer_text }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- No responses yet -->
+        <div class="bg-white rounded-lg shadow-md p-12 text-center">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No responses yet</h3>
+            <p class="text-gray-600 mb-6">This survey hasn't received any responses yet. Share the survey link to start collecting feedback.</p>
+            <a href="/survey/{{ survey.id }}" class="bg-barangay-blue text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                View Survey
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
